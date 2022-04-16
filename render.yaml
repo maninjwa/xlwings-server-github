@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: xlwings-googlesheets-fastapi-github
+    env: docker
+    region: ohio
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: GITHUB_ACCESS_TOKEN
+        sync: false
+      - key: GOOGLE_ALLOWED_DOMAINS
+        sync: false
+      - key: XLWINGS_LICENSE_KEY
+        sync: false
