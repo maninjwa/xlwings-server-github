@@ -18,7 +18,7 @@ This sample works with:
 
 ## Client
 
-* Google Sheets template: https://docs.google.com/spreadsheets/d/1QqCObh12zDL-fOvKFbFnXBCO-wHqrrVvwaxUjmd3Kuo/template/previewperson
+* Google Sheets template: https://docs.google.com/spreadsheets/d/1QqCObh12zDL-fOvKFbFnXBCO-wHqrrVvwaxUjmd3Kuo/template/preview
 * Once you've copied the template, click on `Extensions` > `Apps Scripts` and replace `URL` with the actual URL of your server
 * Fill in a repo name in the form `owner/repo`, then hit the refresh button
 
