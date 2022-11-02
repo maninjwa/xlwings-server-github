@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: xlwings-googlesheets-fastapi-github
+    name: xlwings-server-github
     env: docker
     region: ohio
     plan: free
