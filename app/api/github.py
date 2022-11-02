@@ -4,6 +4,7 @@ from typing import List, Tuple
 from urllib.parse import parse_qs, urlparse
 
 import httpx
+import matplotlib.pyplot as plt
 import pandas as pd
 import xlwings as xw
 from fastapi import APIRouter, Body, Security, status
@@ -64,6 +65,21 @@ async def analyze_issues(data: dict = Body):
         issues["State"] == "open", :
     ].drop(columns=["Id", "State", "Closed at"])
 
+    # Matplotlib plot
+    plt.style.use("fivethirtyeight")
+    ax = cumulative_issues_per_month.plot.area(
+        figsize=(9, 6), stacked=False, color=["#4185f4", "#ea4435"]
+    )
+    fig = ax.get_figure()
+    fig.suptitle("Total vs. Closed Issues", fontsize=14, fontweight="bold")
+    dashboard_sheet.pictures.add(
+        image=fig,
+        name="time_series",
+        anchor=dashboard_sheet["I2"],
+        export_options={"bbox_inches": "tight", "dpi": 80},
+        update=True,
+    )
+
     return book.json()
 
 
@@ -89,9 +105,9 @@ async def get_urls(repo: str) -> Tuple[List, httpx.Response]:
         error_message = response.json().get("message")
         raise HTTPException(
             response.status_code,
-            detail=error_message
+            detail=f"Error contacting GitHub: {error_message}"
             if error_message
-            else f"GitHub responded with error {response.status_code}",
+            else f"Error contacting GitHub: {response.status_code}",
         )
     if response.links.get("last"):
         parsed_last_url = urlparse(response.links["last"]["url"])
@@ -113,9 +129,9 @@ async def get_issues(repo_name: str) -> pd.DataFrame:
             error_message = response.json().get("message")
             raise HTTPException(
                 response.status_code,
-                detail=error_message
+                detail=f"Error contacting GitHub: {error_message}"
                 if error_message
-                else f"GitHub responded with error {response.status_code}",
+                else f"Error contacting GitHub: {response.status_code}",
             )
         parts.append(pd.DataFrame(data=response.json()))
     issues = pd.concat(parts)
