@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import PlainTextResponse
@@ -7,6 +9,9 @@ from .api import github
 
 # Don't expose the docs publicly
 app = FastAPI(docs_url=None, redoc_url=None)
+
+# Logging configuration
+logging.basicConfig(level=logging.INFO)
 
 # Error handling
 # Only handle those Exceptions where you want the frontend to show a detailed error.

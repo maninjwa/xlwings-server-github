@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from itertools import repeat
 from typing import List, Tuple
 from urllib.parse import parse_qs, urlparse
@@ -11,7 +12,7 @@ from fastapi import APIRouter, Body, Security, status
 from fastapi.exceptions import HTTPException
 
 from .. import settings
-from ..core.auth import authenticate
+from ..core.auth import User, authenticate
 
 # Require authentication for all endpoints for this router
 router = APIRouter(
@@ -24,8 +25,15 @@ BASE_URL = "https://api.github.com"
 PAGE_SIZE = 100
 
 
+logger = logging.getLogger(__name__)
+
+
 @router.post("/issues")
-async def analyze_issues(data: dict = Body):
+async def analyze_issues(
+    data: dict = Body, current_user: User = Security(authenticate)
+):
+    logger.info(f"Running query for {current_user.email}")
+
     # Google Sheet objects
     book = xw.Book(json=data)
     dashboard_sheet = book.sheets["Dashboard"]
